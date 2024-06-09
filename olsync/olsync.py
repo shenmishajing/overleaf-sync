@@ -12,7 +12,7 @@
 import click
 import os
 from yaspin import yaspin
-import pickle
+import json
 import zipfile
 import io
 import dateutil.parser
@@ -51,8 +51,8 @@ def main(ctx, local, remote, project_name, cookie_path, sync_path, olignore_path
             raise click.ClickException(
                 "Persisted Overleaf cookie not found. Please login or check store path.")
 
-        with open(cookie_path, 'rb') as f:
-            store = pickle.load(f)
+        with open(cookie_path) as f:
+            store = json.load(f)
 
         overleaf_client = OverleafClient(store["cookie"], store["csrf"])
 
@@ -147,8 +147,8 @@ def list_projects(cookie_path, verbose):
         raise click.ClickException(
             "Persisted Overleaf cookie not found. Please login or check store path.")
 
-    with open(cookie_path, 'rb') as f:
-        store = pickle.load(f)
+    with open(cookie_path) as f:
+        store = json.load(f)
 
     overleaf_client = OverleafClient(store["cookie"], store["csrf"])
 
@@ -189,8 +189,8 @@ def download_pdf(project_name, download_path, cookie_path, verbose):
         raise click.ClickException(
             "Persisted Overleaf cookie not found. Please login or check store path.")
 
-    with open(cookie_path, 'rb') as f:
-        store = pickle.load(f)
+    with open(cookie_path) as f:
+        store = json.load(f)
 
     overleaf_client = OverleafClient(store["cookie"], store["csrf"])
 
@@ -210,8 +210,8 @@ def login_handler(path):
     store = olbrowserlogin.login()
     if store is None:
         return False
-    with open(path, 'wb+') as f:
-        pickle.dump(store, f)
+    with open(path, 'w') as f:
+        json.dump(store, f)
     return True
 
 
