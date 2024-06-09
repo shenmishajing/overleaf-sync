@@ -24,11 +24,9 @@ from pathlib import Path
 try:
     # Import for pip installation / wheel
     from olsync.olclient import OverleafClient
-    import olsync.olbrowserlogin as olbrowserlogin
 except ImportError:
     # Import for development
     from olclient import OverleafClient
-    import olbrowserlogin
 
 
 @click.group(invoke_without_command=True)
@@ -204,6 +202,11 @@ def download_pdf(project_name, download_path, cookie_path, verbose):
 
 
 def login_handler(path):
+    try:
+        import olsync.olbrowserlogin as olbrowserlogin
+    except ImportError:
+        import olbrowserlogin
+
     store = olbrowserlogin.login()
     if store is None:
         return False
